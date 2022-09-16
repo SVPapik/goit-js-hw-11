@@ -68,8 +68,9 @@ async function onLoadMore() {
 
   scroll(2);
 
-  if (currentHits === response.totalHits) {
+  if (currentHits >= response.totalHits) {
     loadMoreBtn.classList.add('is-hidden');
     endOfResults.classList.remove('is-hidden');
+    Notify.info("We're sorry, but you've reached the end of search results.");
   }
 }
