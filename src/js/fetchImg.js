@@ -6,7 +6,8 @@ export default async function fetchImg(value, page) {
   const PARAMS = `key=${KEY}&q=${value}&image_type=photo&min_width=800&orientation=horizontal&safesearch=true&per_page=40&page=${page}`;
 
   try {
-    return await axios.get(`${URL}?${PARAMS}`).then(response => response.data);
+    const response = await axios.get(`${URL}?${PARAMS}`);
+    return response.data;
   } catch (error) {
     console.error(error);
   }

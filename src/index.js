@@ -7,7 +7,6 @@ const { searchForm, gallery, loadMoreBtn, endOfResults } = {
   searchForm: document.querySelector('#search-form'),
   gallery: document.querySelector('.gallery'),
   loadMoreBtn: document.querySelector('.load-more'),
-  endOfResults: document.querySelector('.gallery-end'),
 };
 
 let page = 1;
@@ -21,7 +20,7 @@ async function onSearch(evt) {
   searchQuery = evt.currentTarget.searchQuery.value.trim();
   page = 1;
 
-  if (searchQuery === '') {
+  if (!searchQuery) {
     gallery.innerHTML = '';
     return;
   }
@@ -31,30 +30,23 @@ async function onSearch(evt) {
 
   if (response.totalHits > 40) {
     loadMoreBtn.classList.remove('is-hidden');
-    endOfResults.classList.add('is-hidden');
   } else {
     loadMoreBtn.classList.add('is-hidden');
-    endOfResults.classList.remove('is-hidden');
   }
 
-  try {
-    if (response.totalHits > 0) {
-      Notify.success(`Hooray! We found ${response.totalHits} images.`);
-      gallery.innerHTML = '';
-      markupGallery(response.hits, gallery);
-      scroll(-100);
-    }
+  if (response.totalHits > 0) {
+    Notify.success(`Hooray! We found ${response.totalHits} images.`);
+    gallery.innerHTML = '';
+    markupGallery(response.hits, gallery);
+    scroll(-100);
+  }
 
-    if (response.totalHits === 0) {
-      gallery.innerHTML = '';
-      Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-      loadMoreBtn.classList.add('is-hidden');
-      endOfResults.classList.add('is-hidden');
-    }
-  } catch (error) {
-    console.log(error);
+  if (response.totalHits === 0) {
+    gallery.innerHTML = '';
+    Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+    loadMoreBtn.classList.add('is-hidden');
   }
 }
 
@@ -70,7 +62,6 @@ async function onLoadMore() {
 
   if (currentHits >= response.totalHits) {
     loadMoreBtn.classList.add('is-hidden');
-    endOfResults.classList.remove('is-hidden');
     Notify.info("We're sorry, but you've reached the end of search results.");
   }
 }
